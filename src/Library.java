@@ -1,21 +1,19 @@
 import java.util.*;
 
 public class Library {
+    private int bookId=1;
     HashMap<Integer, Book> booksById;
-    HashMap<String, List<Book>> booksByTitle;
     Hashtable<Integer, User> users;
     Trie titleTrie = new Trie();
 
     public Library() {
         booksById = new HashMap<>();
-        booksByTitle = new HashMap<>();
         users = new Hashtable<>();
     }
 
-    public void addBook(Book book) {
+    public void addBook(String title, String author) {
+        Book book=new Book(bookId++,title,author);
         booksById.put(book.getId(), book);
-        booksByTitle.putIfAbsent(book.getTitle(), new ArrayList<>());
-        booksByTitle.get(book.getTitle()).add(book);
         titleTrie.insert(book.getTitle(), book);
         System.out.println("Book added successfully.");
     }
@@ -23,13 +21,7 @@ public class Library {
     public void removeBook(int bookId) {
         if (booksById.containsKey(bookId)) {
             Book book = booksById.remove(bookId);
-            List<Book> booksWithTitle = booksByTitle.get(book.getTitle());
-            if (booksWithTitle != null) {
-                booksWithTitle.remove(book);
-                if (booksWithTitle.isEmpty()) {
-                    booksByTitle.remove(book.getTitle());
-                }
-            }
+            titleTrie.delete(book.getTitle(), book);
             System.out.println("Book removed successfully.");
         } else {
             System.out.println("Book not found.");
@@ -88,7 +80,7 @@ public class Library {
             System.out.println("No books found in the Library.");
         }else{
             for (Book book : booksById.values()) {
-                System.out.println(book.getTitle());
+                System.out.println(book.getId()+". "+book.getTitle());
             }
         }
     }
@@ -134,4 +126,43 @@ public class Library {
         }
         return merged;
     }
+
+    public void searchUserIdsByName(String name) {
+        boolean found = false;
+        System.out.println("Searching for users with name: \"" + name + "\"");
+        for (User user : users.values()) {
+            if (user.getName().equalsIgnoreCase(name)) {
+                System.out.println("User ID: " + user.getUserId() + ", Name: " + user.getName());
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No user found with name \"" + name + "\".");
+        }
+    }
+
+    public void displayUserInfoById(int userId) {
+        User user = users.get(userId);
+        if (user == null) {
+            System.out.println("User with ID " + userId + " not found.");
+            return;
+        }
+
+        System.out.println("===== User Details =====");
+        System.out.println("User ID   : " + user.getUserId());
+        System.out.println("User Name : " + user.getName());
+
+        List<Book> issued = user.getIssuedBooks();
+        if (issued.isEmpty()) {
+            System.out.println("Issued Books: None");
+        } else {
+            System.out.println("Issued Books:");
+            for (Book book : issued) {
+                System.out.println("  - [" + book.getId() + "] " + book.getTitle() + " by " + book.getAuthor());
+            }
+        }
+    }
+
+
 }

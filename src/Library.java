@@ -20,7 +20,12 @@ public class Library {
 
     public void removeBook(int bookId) {
         if (booksById.containsKey(bookId)) {
-            Book book = booksById.remove(bookId);
+            Book book = booksById.get(bookId);
+            if (book.isIssued()) {
+                System.out.println("Cannot remove a book that is currently issued.");
+                return;
+            }
+            booksById.remove(bookId);
             titleTrie.delete(book.getTitle(), book);
             System.out.println("Book removed successfully.");
         } else {
@@ -28,7 +33,12 @@ public class Library {
         }
     }
 
+
     public void registerUser(User user) {
+        if (users.containsKey(user.getUserId())) {
+            System.out.println("User ID already exists.");
+            return;
+        }
         users.put(user.getUserId(), user);
         System.out.println("User registered successfully.");
     }

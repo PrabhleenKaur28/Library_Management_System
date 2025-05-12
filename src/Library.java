@@ -4,6 +4,7 @@ public class Library {
     HashMap<Integer, Book> booksById;
     HashMap<String, List<Book>> booksByTitle;
     Hashtable<Integer, User> users;
+    Trie titleTrie = new Trie();
 
     public Library() {
         booksById = new HashMap<>();
@@ -15,6 +16,7 @@ public class Library {
         booksById.put(book.getId(), book);
         booksByTitle.putIfAbsent(book.getTitle(), new ArrayList<>());
         booksByTitle.get(book.getTitle()).add(book);
+        titleTrie.insert(book.getTitle(), book);
         System.out.println("Book added successfully.");
     }
 
@@ -69,7 +71,7 @@ public class Library {
     }
 
     public void searchBooksByTitle(String title) {
-        List<Book> books = booksByTitle.get(title);
+        List<Book> books = titleTrie.searchByPrefix(title);
         if (books != null && !books.isEmpty()) {
             System.out.println("Books found with title \"" + title + "\":");
             for (Book b : books) {

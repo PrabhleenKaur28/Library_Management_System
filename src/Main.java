@@ -20,7 +20,7 @@ public class Main {
         library.registerUser(u1);
         library.registerUser(u2);
 
-        library.searchBooksByTitle("Harry Potter and the Philosopher's Stone");
+        library.searchBooksByTitle("Harry Potter");
 
         library.issueBook(1,1);
         library.issueBook(1,2);

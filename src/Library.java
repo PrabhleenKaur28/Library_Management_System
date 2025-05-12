@@ -4,20 +4,17 @@ public class Library {
     HashMap<Integer, Book> booksById;
     HashMap<String, List<Book>> booksByTitle;
     Hashtable<Integer, User> users;
-    Stack<String> history;
 
     public Library() {
         booksById = new HashMap<>();
         booksByTitle = new HashMap<>();
         users = new Hashtable<>();
-        history = new Stack<>();
     }
 
     public void addBook(Book book) {
         booksById.put(book.getId(), book);
         booksByTitle.putIfAbsent(book.getTitle(), new ArrayList<>());
         booksByTitle.get(book.getTitle()).add(book);
-        history.push("Added Book: " + book.getId());
         System.out.println("Book added successfully.");
     }
 
@@ -31,7 +28,6 @@ public class Library {
                     booksByTitle.remove(book.getTitle());
                 }
             }
-            history.push("Removed Book: " + bookId);
             System.out.println("Book removed successfully.");
         } else {
             System.out.println("Book not found.");
@@ -40,7 +36,6 @@ public class Library {
 
     public void registerUser(User user) {
         users.put(user.getUserId(), user);
-        history.push("Registered User: " + user.getUserId());
         System.out.println("User registered successfully.");
     }
 
@@ -57,7 +52,6 @@ public class Library {
         }
         book.setIssued(true);
         user.issueBook(book);
-        history.push("Issued Book: " + bookId + " to User: "+userId);
         System.out.println("Book Issued successfully.");
     }
 
@@ -71,7 +65,6 @@ public class Library {
         }
         book.setIssued(false);
         user.returnBook(book);
-        history.push("Returned Book: " + bookId + " from User: "+userId);
         System.out.println("Book Returned successfully.");
     }
 

@@ -92,4 +92,46 @@ public class Library {
             }
         }
     }
+
+    public void listBooksAlphabetically() {
+        List<Book> sortedBooks = sortBooksAlphabetically();
+        if (sortedBooks.isEmpty()) {
+            System.out.println("No books found in the Library.");
+        } else {
+            for (Book book : sortedBooks) {
+                System.out.println(book.getTitle());
+            }
+        }
+    }
+    private List<Book> sortBooksAlphabetically() {
+        List<Book> books = new ArrayList<>(booksById.values());
+        return mergeSort(books);
+    }
+    private List<Book> mergeSort(List<Book> books) {
+        if(books.size()<=1){
+            return books;
+        }
+        int mid=books.size()/2;
+        List<Book> left=mergeSort(books.subList(0, mid));
+        List<Book> right=mergeSort(books.subList(mid, books.size()));
+        return merge(left,right);
+    }
+    private List<Book> merge(List<Book> left, List<Book> right) {
+        List<Book> merged = new ArrayList<>();
+        int i=0,j=0;
+        while(i<left.size() && j<right.size()){
+            if(left.get(i).getTitle().compareToIgnoreCase(right.get(j).getTitle()) <= 0){
+                merged.add(left.get(i++));
+            }else{
+                merged.add(right.get(j++));
+            }
+        }
+        while(i<left.size()){
+            merged.add(left.get(i++));
+        }
+        while(j<right.size()){
+            merged.add(right.get(j++));
+        }
+        return merged;
+    }
 }
